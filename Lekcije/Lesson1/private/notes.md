@@ -26,20 +26,14 @@ GIT & GITHUB
 -iz terminala(git-bash)
 cd:/xampp/htdocs
 git init    (Napravi se hidden folder .git)
+git status  
+Novi file - .gitignore u kojem napišemo što treab zanemariti nbproject/
+git add .gitignore .htaccess .page1.html
+git config user.email "dudjakmario@hotmail.com"
+git commit
+-Napisati opis promjene
 
-git config user.name "MarioDudjak"
-git config user.email dudjakmario@hotmail.com
-git status 
-
-git add.
-git commit -m "first commit"
-git remote add origin https://github.com/MarioDudjak/PHPAcademy
-git push -u origin master
-
-
-
-
-
+Kopirati s githuba naredbe za push (Shift +Insert za copy paste)
 
 
 
