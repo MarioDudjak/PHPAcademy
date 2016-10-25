@@ -81,8 +81,8 @@ foreach($postalOfficesByRegion as $key1=>$item1){
 	echo "\t],\n";
 }
 echo "];"; 
-
 */
+
 fclose($handle);
 
 function  getRegionName($area,$niz){
