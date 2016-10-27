@@ -1,0 +1,50 @@
+<form method="POST" action="submit" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Osobne informacije:</legend>
+        
+        <label>Ime i prezime</label></br>
+        <input type="text" name="name"/>
+        <span class="error">* <?php echo $nameErr;?></span>
+        <br><br>
+        
+        <label>Mail adresa</label></br>
+        <input type="text" name="email"/>
+        <span class="error">* <?php echo $emailErr;?></span><br><br>
+       
+        <label>Smjer</label></br>
+        <input type="text" name="smjer"/>
+        <span class="error">* <?php echo $smjerErr;?></span><br><br>
+        
+
+        <label>Godina studija</label></br>
+        <input type="radio" name="godina" value="1">1</br>
+        <input type="radio" name="godina" value="2">2</br>
+        <input type="radio" name="godina" value="3">3</br>
+        <input type="radio" name="godina" value="4">4</br>
+        <input type="radio" name="godina" value="5">5</br>
+        <span class="error">* <?php echo $godinaErr;?></span><br><br>
+  
+        <label>Što te motiviralo da se prijaviš?</label></br>
+        <textarea name="motivacija" rows="5" cols="20">
+        </textarea></br>
+        
+        <label>Imaš li predznanje vezano uz web development?</label></br>
+        <textarea name="predznanje" rows="5" cols="20">
+        </textarea></br>
+        
+        
+
+        <label>U kojim jezicima si do sada programirao?</label></br>
+        <input type="checkbox" name="program" value="C#">C#<br>
+        <input type="checkbox" name="program" value="JAVA">JAVA<br>
+        <input type="checkbox" name="program" value="C++">C++<br>
+        <input type="checkbox" name="program" value="C">C<br>
+        <input type="checkbox" name="program" value="Python">Python<br>
+        </br>
+
+        <label>Uploadaj primjer svoga koda:</label></br>
+        <input type="file" name="fileToUpload" id="fileToUpload"></br></br>
+        <input type="submit" value="Submit" name="submit">
+     
+        </fieldset>
+    </form>
