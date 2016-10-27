@@ -1,147 +1,237 @@
-<!DOCTYPE html>
-<html lang="hr">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-   
-</head>
-<body>
-
-<header>
-    <ul>
-        <li><a href="index.php">Naslovnica</a></li>
-        <li><a href="form.php">Prijavi se</a></li>
-        <li>Login (za admine)</li>
-    </ul>
-</header>
-
-<main>
-
-    <h1>Prijavnica za PHP akademiju</h1>
-
-    <p>Prijavnica za prvo osječko izdanje PHP akademije koju Inchoo pokreće u suradnji s FERITom.</p>
-    <p>Prijave traju do 10.10., pa požuri i svoje mjesto rezerviraj već sad.</p>
-    <p>Više informacija na:
-        <a href="http://inchoo.hr/php-akademija-2016/" target="_blank">http://inchoo.hr/php-akademija-2016/</a>
-    </p>
-
-    <!-- fix form -->
-    <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
-        <fieldset>
-        <legend>Osobne informacije:</legend>
-        <label>Ime i prezime</label>
-    <input type="text" name="name" /></br>
-
-    <label>Mail adresa</label>
-    <input type="text" name="email" /></br>
-
-    <label>Smjer</label>
-    <input type="text" name="smjer" /></br>
-
-    <label>Godina studija</label></br>
-    <input type="radio" name="godina" value="1">1</br>
-    <input type="radio" name="godina" value="2">2</br>
-    <input type="radio" name="godina" value="3">3</br>
-    <input type="radio" name="godina" value="4">4</br>
-    
-  
-    <label>Što te motiviralo da se prijaviš?</label></br>
-    <textarea name="motivacija" rows="5" cols="20">
-    </textarea></br>
-
-    <label>Imaš li predznanje vezano uz web development?</label></br>
-    <textarea name="predznanje" rows="5" cols="20">
-    </textarea></br>
-
-    <label>U kojim jezicima si do sada programirao?</label></br>
-    <select>
-    <option value="C#">C#</option>
-    <option value="JAVA">JAVA</option>
-    <option value="C++">C++</option>
-    <option value="Python">Python</option>
-    </select></br></br></br>
-
-    <label>Uploadaj primjer svoga koda:</label>
-    <input type="file" name="fileToUpload" id="fileToUpload">
-    
-    </br><input type="submit" value="Submit" name="submit">
-    </form>
-</fieldset>
-</main>
 <?php
-// define variables and set to empty values
-$name = $email = $gender = $comment = $website = "";
-$nameErr = $emailErr = $genderErr = $websiteErr = "";
+$name = $email = $smjer = $motivacija = $predznanje =$godina =$program= "";
+$nameErr = $emailErr = $smjerErr =$godinaErr = "";
 
+if (isset($_POST['submit'])){
+$target_dir = "uploads/";
+$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
+$uploadOk = 1;
+$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+
+// Check if file already exists
+
+/* Ovo također doraditi
+    if (file_exists($target_file)) {
+    echo "Već postoji datoteka pod ovim imenom.\n";
+    $uploadOk = 0;
+}
+*/
+
+// Check if $uploadOk is set to 0 by an error
+if ($uploadOk == 0) {
+    echo "Upload nije uspio.\n";
+// if everything is ok, try to upload file
+} else {
+    
+    if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
+      //  echo "Datoteka ". basename( $_FILES["fileToUpload"]["name"]). " je prenesena.\n";
+    } else {
+        echo "Upload nije uspio.\n";
+    }
+    }
+   
+
+}
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
     if (empty($_POST["name"])) {
-    $nameErr = "Name is required";
+    $nameErr = "Niste unijeli ime.";
   } else {
     $name = test_input($_POST["name"]);
     if (!preg_match("/^[a-zA-Z ]*$/",$name)) {
-      $nameErr = "Only letters and white space allowed"; 
+      $nameErr = "Dozvoljena su samo slova i praznine"; 
     }
   }
 
   if (empty($_POST["email"])) {
-    $emailErr = "Email is required";
+    $emailErr = "Niste unijeli e-mail.";
   } else {
     $email = test_input($_POST["email"]);
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-      $emailErr = "Invalid email format"; 
+      $emailErr = "E-mail nije u dobrom formatu"; 
     }
   }
-
+  
   if (empty($_POST["smjer"])) {
-    $smjerErr = "";
+    $smjerErr = "Morate unijeti smjer.";
   } else {
     $smjer = test_input($_POST["smjer"]);
   }
-
-  if (empty($_POST["motivacija"])) {
-    $motivacijaErr = "";
-  } else {
+  
     $motivacija = test_input($_POST["motivacija"]);
-  }
-  if (empty($_POST["predznanje"])) {
-    $predznanjeErr = "";
-  } else {
     $predznanje= test_input($_POST["predznanje"]);
-  }
+   //Ovo još treba doraditi $program =test_input($_POST["program"]);
 
   if (empty($_POST["godina"])) {
     $godinaErr = "Morate unijeti godinu.";
   } else {
     $godina = test_input($_POST["godina"]);
   }
+  
+  
+if (($nameErr=="")&&($emailErr=="")&&($godinaErr=="")&&($smjerErr=="")){
+     
+        # Title of the CSV
+        $Content = "";
+        
+        //set the data of the CSV
+        $Content .= "$name, $email, $smjer, $godina, $motivacija, $predznanje, $program\n";
+
+        # set the file name and create CSV file
+        $FileName = "Prijave.csv";
+    
+        $fd= fopen($FileName,"a");
+        fwrite($fd, $Content);
+        fclose($fd);
+        header("Location: success.php");
+        exit();
+   }
+
+/*
+//if their are errors display them
+ if((isset($nameErr))||(isset($emailErr))||(isset($smjerErr))||(isset($godinaErr))){
+     $error=array($nameErr,$emailErr,$smjerErr,$godinaErr);
+    foreach($error as $error){
+        echo "<p style='color:#ff0000'>$error</p>";
+    }
+}
+ */
 }
 
-function test_input($data) {
+  function test_input($data) {
   $data = trim($data);
   $data = stripslashes($data);
   $data = htmlspecialchars($data);
   return $data;
 }
 
-$target_dir = "uploads/";
-$target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
-$uploadOk = 1;
-$imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-// Check if image file is a actual image or fake image
-if(isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-    if($check !== false) {
-        echo "File is an image - " . $check["mime"] . ".";
-        $uploadOk = 1;
-    } else {
-        echo "File is not an image.";
-        $uploadOk = 0;
-    }
-}
 ?>
-<footer>
-    <p>&copy; PHP Akademija, 2016</p>
-</footer>
 
+
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>Prijavnica za PHP Akademiju</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="../../dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <link href="../../assets/css/ie10-viewport-bug-workaround.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="cover.css" rel="stylesheet">
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+    <script src="../../assets/js/ie-emulation-modes-warning.js"></script>
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+</head>
+<body>
+
+ <div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+             
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="index.php">Naslovnica</a></li>
+                  <li><a href="form.php">Prijavi se</a></li>
+                <li><a href="admin.php">Admin</a></li> 
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+<div class="inner cover">
+            <h1 class="cover-heading">Prijavnica za PHP akademiju</h1>
+            <p class="lead">Prijavnica za prvo osječko izdanje PHP akademije koju Inchoo pokreće u suradnji s FERITom.</p>
+             <p class="lead">Prijave traju do 10.10., pa požuri i svoje mjesto rezerviraj već sad.</p>
+             <p class="lead">Više informacija na:
+        <a href="http://inchoo.hr/php-akademija-2016/" target="_blank">http://inchoo.hr/php-akademija-2016/</a></p>
+         
+             <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" enctype="multipart/form-data">
+        <fieldset>
+        <legend>Osobne informacije:</legend>
+        
+        <label>Ime i prezime</label></br>
+        <input type="text" name="name"/>
+        <span class="error">* <?php echo $nameErr;?></span>
+        <br><br>
+        
+        <label>Mail adresa</label></br>
+        <input type="text" name="email"/>
+        <span class="error">* <?php echo $emailErr;?></span><br><br>
+       
+        <label>Smjer</label></br>
+        <input type="text" name="smjer"/>
+        <span class="error">* <?php echo $smjerErr;?></span><br><br>
+        
+
+        <label>Godina studija</label></br>
+        <input type="radio" name="godina" value="1">1</br>
+        <input type="radio" name="godina" value="2">2</br>
+        <input type="radio" name="godina" value="3">3</br>
+        <input type="radio" name="godina" value="4">4</br>
+        <input type="radio" name="godina" value="5">5</br>
+        <span class="error">* <?php echo $godinaErr;?></span><br><br>
+  
+        <label>Što te motiviralo da se prijaviš?</label></br>
+        <textarea name="motivacija" rows="5" cols="20">
+        </textarea></br>
+        
+        <label>Imaš li predznanje vezano uz web development?</label></br>
+        <textarea name="predznanje" rows="5" cols="20">
+        </textarea></br>
+        
+        
+
+        <label>U kojim jezicima si do sada programirao?</label></br>
+        <input type="checkbox" name="program" value="C#">C#<br>
+        <input type="checkbox" name="program" value="JAVA">JAVA<br>
+        <input type="checkbox" name="program" value="C++">C++<br>
+        <input type="checkbox" name="program" value="C">C<br>
+        <input type="checkbox" name="program" value="Python">Python<br>
+        </br>
+
+        <label>Uploadaj primjer svoga koda:</label></br>
+        <input type="file" name="fileToUpload" id="fileToUpload"></br></br>
+        <input type="submit" value="Submit" name="submit">
+     
+        </fieldset>
+    </form>
+
+</div>
+
+          <div class="mastfoot">
+            <div class="inner">
+              <p>&copy; PHP Akademija, 2016</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
 </body>
 </html>
+
