@@ -1,19 +1,38 @@
-<form method="POST" action="submit" enctype="multipart/form-data">
+<div class="site-wrapper">
+
+      <div class="site-wrapper-inner">
+
+        <div class="cover-container">
+
+          <div class="masthead clearfix">
+            <div class="inner">
+             
+              <nav>
+                <ul class="nav masthead-nav">
+                  <li class="active"><a href="http://localhost/Lekcije/Lesson4/mvc-app/">Naslovnica</a></li>
+                  <li><a href="http://localhost/Lekcije/Lesson4/mvc-app/form">Prijavi se</a></li>
+                <li><a href="http://localhost/Lekcije/Lesson4/mvc-app/admin">Admin</a></li> 
+                </ul>
+              </nav>
+            </div>
+          </div>
+
+
+<form method="POST" action="http://localhost/Lekcije/Lesson4/mvc-app/form/submit" enctype="multipart/form-data">
         <fieldset>
         <legend>Osobne informacije:</legend>
         
         <label>Ime i prezime</label></br>
         <input type="text" name="name"/>
-        <span class="error">* <?php echo $nameErr;?></span>
         <br><br>
         
         <label>Mail adresa</label></br>
         <input type="text" name="email"/>
-        <span class="error">* <?php echo $emailErr;?></span><br><br>
+        <br><br>
        
         <label>Smjer</label></br>
         <input type="text" name="smjer"/>
-        <span class="error">* <?php echo $smjerErr;?></span><br><br>
+        <br><br>
         
 
         <label>Godina studija</label></br>
@@ -22,7 +41,7 @@
         <input type="radio" name="godina" value="3">3</br>
         <input type="radio" name="godina" value="4">4</br>
         <input type="radio" name="godina" value="5">5</br>
-        <span class="error">* <?php echo $godinaErr;?></span><br><br>
+        <br><br>
   
         <label>Što te motiviralo da se prijaviš?</label></br>
         <textarea name="motivacija" rows="5" cols="20">

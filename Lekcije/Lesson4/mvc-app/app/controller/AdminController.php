@@ -1,14 +1,14 @@
 <?php
 
-class IndexController
+class AdminController
 {
    
     public function index()
     {
         $view = new View();
         //$view->layout('layout');
-        $view->render('index', [
-            'title' => 'Naslovnica'
+        $view->render('admin', [
+            'title' => 'Prijava za admina'
         ]);
     }
     
