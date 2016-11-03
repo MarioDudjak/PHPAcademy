@@ -28,7 +28,10 @@ class FormController
        }
        
     $name = $email = $smjer = $motivacija = $predznanje =$godina =$program= "";
- 
+    
+ /* Upload datoteke
+  
+  
 $target_dir = "C:/xampp/htdocs/Lekcije/Lesson4/mvc-app/app/controller/uploads/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
@@ -39,13 +42,17 @@ $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
     } else {
         echo "Upload nije uspio.\n";
     }
-      
+  
+   */  
+    
     $name = test_input($_POST["name"]);
     $email = test_input($_POST["email"]);
     $smjer = test_input($_POST["smjer"]);
     $motivacija = test_input($_POST["motivacija"]);
     $predznanje= test_input($_POST["predznanje"]);
   //  $godina = test_input($_POST["godina"]);
+  
+    /* Spremanje u CSV 
         # Title of the CSV
         $Content = "";
         
@@ -58,13 +65,41 @@ $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
         $fd= fopen($FileName,"a");
         fwrite($fd, $Content);
         fclose($fd);
- 
-         $view = new View();
+ */
+        
+    
+    
+   
+     $dsn= 'mysql:host=localhost;dbname=BazaLesson5;charset=utf8';
+     $username='root';
+     $password='';
+
+try {
+$dbh = new PDO($dsn,$username,$password);
+
+$dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // <== add this line
+$sql = "INSERT INTO Tablica1 (name,email,academy_major,motivation,prior_knowledge) VALUES ('".$_POST["name"]."','".$_POST["email"]."','".$_POST["smjer"]."','".$_POST["motivacija"]."','".$_POST["predznanje"]."')";
+if ($dbh->query($sql)) {
+echo "<script type= 'text/javascript'>alert('New Record Inserted Successfully');</script>";
+}
+else{
+echo "<script type= 'text/javascript'>alert('Data not successfully Inserted.');</script>";
+}
+
+$dbh = null;
+}
+catch(PDOException $e)
+{
+echo $e->getMessage();
+}
+
+
+       $view = new View();
         //$view->layout('layout');
         $view->render('success', [
             'title' => 'Uspješna prijava!'
         ]);
-       
+     
 
     }
 
